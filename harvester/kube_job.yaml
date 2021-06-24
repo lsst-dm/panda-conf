@@ -1,0 +1,91 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: grid-job
+spec:
+  ttlSecondsAfterFinished: 172800
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      tolerations:
+        - key: "cloud.google.com/gke-preemptible"
+          operator: "Equal"
+          value: "true"
+          effect: "NoSchedule"
+      containers:
+        - name: rubin-grid-centos7
+          image: us.gcr.io/panda-dev-1a74/centos:middleware_v0
+          securityContext:
+            privileged: true
+            runAsUser: 0
+          env:
+            - name: computingSite
+              value: "$computingSite"
+            - name: pandaQueueName
+              value: "$pandaQueueName"
+            - name: proxySecretPath
+              value: "$proxySecretPath"
+            - name: proxyContent
+              value: "$proxyContent"
+            - name: workerID
+              value: "$workerID"
+            - name: logs_frontend_w
+              value: "$logs_frontend_w"
+            - name: logs_frontend_r
+              value: "$logs_frontend_r"
+            - name: resourceType
+              value: "$resourceType"
+            - name: HARVESTER_WORKER_ID
+              value: "$HARVESTER_WORKER_ID"
+            - name: HARVESTER_ID
+              value: "$HARVESTER_ID"
+            - name: PANDA_JSID
+              value: "$PANDA_JSID"
+            - name: TMPDIR
+              value: "/tmp"
+            - name: PILOT_NOKILL
+              value: "True"
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: /gcscreds/gcs-access.json
+
+          command: ["/usr/bin/bash"]
+          args: ["-c", "whoami;cd /tmp;export ALRB_noGridMW=NO; wget https://storage.googleapis.com/drp-us-central1-containers/pilots_starter_d3.py; chmod 755 ./pilots_starter_d3.py; ./pilots_starter_d3.py || true"]
+          volumeMounts:
+            - name: proxy-secret
+              mountPath: /proxy
+            - name: docker-daemon
+              mountPath: /var/run/docker.sock  
+            - name: gcs-credvol
+              mountPath: "/gcscreds"
+              readOnly: true
+            - name: credentialsmnt
+              mountPath: "/credentials"
+              readOnly: true
+          livenessProbe:
+            exec:
+              command:  # returns 0 if log changed less than 10 min ago, otherwise 1
+              - /bin/sh
+              - -c
+              - find /tmp/wrapper-wid.log -mmin -10 | egrep '.*'
+            initialDelaySeconds: 300
+            periodSeconds: 300
+            failureThreshold: 5
+      volumes:
+        - name: proxy-secret
+          secret:
+              secretName: proxy-secret
+        - name: credentialsmnt
+          secret:
+              secretName: credentials
+        - name: docker-daemon
+          hostPath: 
+                 path: /var/run/docker.sock
+                 type: Socket
+        - name: gcs-credvol
+          secret:
+              secretName: gcs-access
+              items:
+              - key: jsonFile
+                path: gcs-access.json

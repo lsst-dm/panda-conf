@@ -1,0 +1,84 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: grid-job
+spec:
+  ttlSecondsAfterFinished: 172800
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: osg-centos7-docker
+          image: yesw2000/osg-wn:CentOS7-Docker
+          securityContext:
+            privileged: true            
+#         image: yesw2000/osg-on-centos7:osg2.0.14-singularity352
+#	  image: spodolsky/hostimagesingularity
+          env:
+            - name: computingSite
+              value: "$computingSite"
+            - name: pandaQueueName
+              value: "$pandaQueueName"
+            - name: proxySecretPath
+              value: "$proxySecretPath"
+            - name: proxyContent
+              value: "$proxyContent"
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: /gcscreds/gcs-access.json
+            - name: workerID
+              value: "$workerID"
+            - name: logs_frontend_w
+              value: "$logs_frontend_w"
+            - name: logs_frontend_r
+              value: "$logs_frontend_r"
+            - name: resourceType
+              value: "$resourceType"
+            - name: HARVESTER_WORKER_ID
+              value: "$HARVESTER_WORKER_ID"
+            - name: HARVESTER_ID
+              value: "$HARVESTER_ID"
+            - name: PANDA_JSID
+              value: "$PANDA_JSID"
+            - name: TMPDIR
+              value: "/tmp"
+            - name: PILOT_NOKILL
+              value: "True"
+              
+          # command: ["/usr/bin/bash"]
+          command: ["/usr/local/bin/bash-docker"]
+          # args: ["-c", "whoami;cd /tmp; curl -k -4 https://storage.googleapis.com/drp-us-central1-containers/pilots_starter_patched_210421.py -o pilots_starter.py; chmod 755 pilots_starter.py; ./pilots_starter.py || true"]
+          args: ["-c", "whoami;cd /tmp; wget https://raw.githubusercontent.com/yesw2000/Harvester/master/pilots_starter.py -O pilots_starter.py; chmod 755 pilots_starter.py; ./pilots_starter.py || true"]
+          volumeMounts:
+            - name: proxy-secret
+              mountPath: /proxy
+            - name: secretsmnt
+              mountPath: "/cloudcreds"
+              readOnly: true
+            - name: gcs-credvol
+              mountPath: "/gcscreds"
+              readOnly: true
+                          
+          livenessProbe:
+            exec:
+              command:  # returns 0 if log changed less than 10 min ago, otherwise 1
+              - /bin/sh
+              - -c
+              - find /tmp/wrapper-wid.log -mmin -10 | egrep '.*'
+            initialDelaySeconds: 300
+            periodSeconds: 300
+            failureThreshold: 3
+      volumes:
+        - name: proxy-secret
+          secret:
+              secretName: proxy-secret
+        - name: gcs-credvol
+          secret:
+              secretName: gcs-access
+              items:
+              - key: jsonFile
+                path: gcs-access.json
+        - name: secretsmnt
+          secret:
+              secretName: accessdata
