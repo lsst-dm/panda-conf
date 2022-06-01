@@ -1,0 +1,142 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: grid-job
+spec:
+  ttlSecondsAfterFinished: 7200
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+#        - name: rubin-grid-centos7
+#          image: us.gcr.io/panda-dev-1a74/centos:middleware_v4
+        - name: osg-centos7-gar
+          image: us-central1-docker.pkg.dev/panda-dev-1a74/pilot/centos:CentOS7-gar_auth
+#          image: yesw2000/osg-wn:CentOS7-gar_auth 
+#          image: us.gcr.io/panda-dev-1a74/osg-wn:CentOS7-gcr_auth-Docker
+#          image: yesw2000/osg-wn:CentOS8-prmon-Docker
+#         image: yesw2000/osg-on-centos7:osg2.0.14-singularity352
+#	  image: spodolsky/hostimagesingularity
+          securityContext:
+            privileged: true            
+          env:
+            - name: computingSite
+              value: "$computingSite"
+            - name: pandaQueueName
+              value: "$pandaQueueName"
+            - name: prodSourceLabel2
+              value: "test"
+            - name: proxySecretPath
+              value: "$proxySecretPath"
+            - name: proxyContent
+              value: "$proxyContent"
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: /gcscreds/gcs-access.json
+#            - name: REALTIME_LOGGING_SERVER
+#              value: "fluent:35.223.149.27:24224"
+#            - name: REALTIME_LOGNAME
+#              value: "debug.test"
+            - name: REALTIME_LOGGING_SERVER
+              value: "google-cloud-logging"
+            - name: REALTIME_LOGNAME
+              value: "Panda-RubinLog"
+            - name: REALTIME_LOGFILES
+              value: "payload-log.json"
+            - name: USE_REALTIME_LOGGING
+              value: "yes"
+            - name: workerID
+              value: "$workerID"
+            - name: logs_frontend_w
+              value: "$logs_frontend_w"
+            - name: logs_frontend_r
+              value: "$logs_frontend_r"
+            - name: resourceType
+              value: "$resourceType"
+            - name: HARVESTER_WORKER_ID
+              value: "$HARVESTER_WORKER_ID"
+            - name: HARVESTER_ID
+              value: "$HARVESTER_ID"
+            - name: PANDA_JSID
+              value: "$PANDA_JSID"
+            - name: TMPDIR
+              value: "/tmp"
+            - name: PILOT_NOKILL
+              value: "True"
+            - name: S3_ENDPOINT_URL
+              value: "https://storage.googleapis.com"
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: credentials
+                  key: AWS_ACCESS_KEY_ID
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: credentials
+                  key: AWS_SECRET_ACCESS_KEY
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: credentials
+                  key: PGPASSWORD
+               
+          command: ["/usr/bin/bash"]
+          # command: ["/usr/local/bin/bash-docker"]
+          # args: ["-c", "whoami;cd /tmp; curl -k -4 https://storage.googleapis.com/drp-us-central1-containers/pilots_starter_patched_210421.py -o pilots_starter.py; chmod 755 pilots_starter.py; ./pilots_starter.py || true"]
+          # args: ["-c", "whoami; docker-credential-gcr config --token-source=env; cd /tmp; wget https://storage.googleapis.com/drp-us-central1-containers/pilots_starter.py -O pilots_starter.py; python3 ./pilots_starter.py || true; sleep 300"]
+          args: ["-c", "whoami; docker-credential-gcr config --token-source=env; cd /tmp; wget https://storage.googleapis.com/drp-us-central1-containers/pilot3_starter-realtimeLog-noTee-V4.py -O pilots_starter.py; python3 ./pilots_starter.py || true; sleep 30; docker system prune -a -f --filter 'until=2h';"]
+          # args: ["-c", "whoami;cd /tmp; wget https://raw.githubusercontent.com/yesw2000/Harvester/master/pilots_starter-prmon.py -O pilots_starter.py; chmod 755 pilots_starter.py; ./pilots_starter.py || true; sleep 300"]
+          # args: ["-c", "whoami;cd /tmp; wget https://storage.googleapis.com/drp-us-central1-containers/pilots_starter-prmon.py -O pilots_starter.py; chmod 755 pilots_starter.py; ./pilots_starter.py"]
+          volumeMounts:
+            - name: proxy-secret
+              mountPath: /proxy
+            - name: docker-daemon
+              mountPath: /var/run/docker.sock  
+            #- name: secretsmnt
+            #  mountPath: "/cloudcreds"
+            #  readOnly: true
+            - name: gcs-credvol
+              mountPath: "/gcscreds"
+              readOnly: true
+            - name: credentialsmnt
+              mountPath: "/credentials"
+              readOnly: true
+            - name: temp-volume
+              mountPath: /tmp/panda
+
+          livenessProbe:
+            exec:
+              command:  # returns 0 if log changed less than 10 min ago, otherwise 1
+              - /bin/sh
+              - -c
+              - find /tmp/wrapper-wid.log -mmin -10 | egrep '.*'
+            initialDelaySeconds: 300
+            periodSeconds: 300
+            failureThreshold: 3
+      volumes:
+        - name: proxy-secret
+          secret:
+              secretName: proxy-secret
+        - name: credentialsmnt
+          secret:
+              secretName: credentials
+        - name: docker-daemon
+          hostPath: 
+                 path: /var/run/docker.sock
+                 type: Socket
+        - name: gcs-credvol
+          secret:
+              secretName: gcs-access
+              items:
+              - key: jsonFile
+                path: gcs-access.json
+        #- name: secretsmnt
+        #  secret:
+        #      secretName: accessdata
+        - name: temp-volume
+          hostPath:
+              path: /tmp/panda
+              type: DirectoryOrCreate
+    

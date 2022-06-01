@@ -9,18 +9,13 @@ spec:
   template:
     spec:
       restartPolicy: Never
-      tolerations:
-        - key: "cloud.google.com/gke-preemptible"
-          operator: "Equal"
-          value: "true"
-          effect: "NoSchedule"
       containers:
 #        - name: rubin-grid-centos7
 #          image: us.gcr.io/panda-dev-1a74/centos:middleware_v4
-#        - name: osg-centos7-docker
-#          image: us.gcr.io/panda-dev-1a74/osg-wn:CentOS7-gcr_auth-Docker
         - name: osg-centos7-gar
           image: us-central1-docker.pkg.dev/panda-dev-1a74/pilot/centos:CentOS7-gar_auth
+#          image: us.gcr.io/panda-dev-1a74/osg-wn:CentOS7-gar_auth
+#          image: yesw2000/osg-wn:CentOS7-gar_auth 
           securityContext:
             privileged: true
             runAsUser: 0
@@ -64,8 +59,7 @@ spec:
             - name: USE_REALTIME_LOGGING
               value: "yes"
           command: ["/usr/bin/bash"]
-#          args: ["-c", "cd /tmp;export ALRB_noGridMW=NO; wget https://storage.googleapis.com/drp-us-central1-containers/pilots_starter-prmon.py -O pilots_starter.py; chmod 755 ./pilots_starter.py; ./pilots_starter.py || true;docker system prune -a -f;"]
-#          args: ["-c", "cd /tmp; docker-credential-gcr config --token-source=env; export ALRB_noGridMW=NO; wget https://storage.googleapis.com/drp-us-central1-containers/pilots_starter-prmon.py -O pilots_starter.py; chmod 755 ./pilots_starter.py; ./pilots_starter.py || true;docker system prune -a -f;"]
+#          args: ["-c", "docker system prune -a -f; cd /tmp;export ALRB_noGridMW=NO; wget https://storage.googleapis.com/drp-us-central1-containers/pilots_starter-prmon.py -O pilots_starter.py; chmod 755 ./pilots_starter.py; ./pilots_starter.py || true;docker system prune -a -f;"]
           args: ["-c", "docker-credential-gcr config --token-source=env; cd /tmp; wget https://storage.googleapis.com/drp-us-central1-containers/pilot3_starter.py -O pilots_starter.py; python3 ./pilots_starter.py || true;docker system prune -a -f;"]
           volumeMounts:
             - name: proxy-secret
