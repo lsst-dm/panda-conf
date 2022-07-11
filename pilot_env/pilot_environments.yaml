@@ -1,0 +1,21 @@
+name: pilot
+channels:
+  - conda-forge
+dependencies:
+  - python==3.9
+  - pip
+  - ca-certificates
+  - openssl
+  - pyopenssl
+  - cryptography
+  - google-api-core
+  - google-auth
+  - google-cloud-core
+  - google-cloud-storage
+  - google-crc32c
+  - google-resumable-media
+  - googleapis-common-protos
+  - voms-clients
+  - pip:
+    - panda-client==1.5.20
+    - rucio-clients
