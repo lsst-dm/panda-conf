@@ -179,6 +179,8 @@ function main () {
     install_pilot
 
     install_pilot_wrapper
+
+    install_panda_setup
 }
 
 
