@@ -1,0 +1,169 @@
+{
+  "DOMA_LSST_GOOGLE_TEST_EXTRA_HIMEM_NON_PREEMPT": {
+    "accesscontrol": "", 
+    "acopytools": {
+      "pr": [
+        "gs"
+      ], 
+      "pw": [
+        "gs"
+      ], 
+      "read_lan": [
+        "gs"
+      ], 
+      "write_lan": [
+        "gs"
+      ], 
+      "write_lan_analysis": [
+        "gs"
+      ]
+    }, 
+    "allow_lan": true, 
+    "allow_wan": false, 
+    "allowednode": "", 
+    "allowjem": true, 
+    "appdir": "", 
+    "astorages": {
+      "pr": [
+        "GKE-LSST_LOGS"
+      ], 
+      "pw": [
+        "GKE-LSST_LOGS"
+      ], 
+      "read_lan": [
+        "GKE-LSST_LOGS"
+      ], 
+      "write_lan": [
+        "GKE-LSST_LOGS"
+      ]
+    }, 
+    "atlas_site": "LSST", 
+    "autosetup_post": "", 
+    "autosetup_pre": "", 
+    "availablecpu": null, 
+    "cachedse": null, 
+    "capability": "himem", 
+    "catchall": "", 
+    "cloud": "LSST", 
+    "comment": "requested by huan lin", 
+    "container_options": "", 
+    "container_type": "", 
+    "copytools": {
+      "gs": {
+        "setup": ""
+      }
+    }, 
+    "corecount": 1, 
+    "corepower": 1.0, 
+    "corepower_data": {
+      "corepower": 1.0, 
+      "corepower_on": true, 
+      "parent_corepower": 0.0, 
+      "parent_corepower_on": false, 
+      "parent_rc_site_corepower": 0.0, 
+      "parent_site_corepower": 0.0, 
+      "parent_site_corepower_on": false
+    }, 
+    "country": "NULL", 
+    "countrygroup": "", 
+    "depthboost": null, 
+    "description": "", 
+    "direct_access_lan": false, 
+    "direct_access_wan": true, 
+    "dq2url": "", 
+    "email": "", 
+    "environ": "", 
+    "envsetup": "", 
+    "envsetupin": "", 
+    "fairsharepolicy": "", 
+    "glexec": "", 
+    "globusadd": "", 
+    "gocname": "NULL", 
+    "gstat": "LSST", 
+    "harvester": "", 
+    "harvester_template": "", 
+    "hc_param": "False", 
+    "hc_suite": [
+      "PFT"
+    ], 
+    "id": 20, 
+    "ignore_swreleases": false, 
+    "is_cvmfs": false, 
+    "is_default": false, 
+    "is_virtual": false, 
+    "jobseed": "std", 
+    "last_modified": "2022-06-15T17:17:37.910320", 
+    "localqueue": "", 
+    "maxdiskio": null, 
+    "maxdiskio_data": {
+      "maxdiskio": null, 
+      "maxdiskio_on": false, 
+      "parent_maxdiskio": null, 
+      "parent_maxdiskio_on": false, 
+      "parent_rc_site_maxdiskio": null, 
+      "parent_site_maxdiskio": null, 
+      "parent_site_maxdiskio_on": false
+    }, 
+    "maxinputsize": 14336, 
+    "maxrss": 220000, 
+    "maxswap": 0, 
+    "maxtime": 0, 
+    "maxwdir": 16336, 
+    "minrss": 18000, 
+    "mintime": 0, 
+    "name": "DOMA_LSST_GOOGLE_TEST_EXTRA_HIMEM_NON_PREEMPT", 
+    "nickname": "DOMA_LSST_GOOGLE_TEST_EXTRA_HIMEM_NON_PREEMPT", 
+    "nodes": 0, 
+    "panda_resource": "DOMA_LSST_GOOGLE_TEST_EXTRA_HIMEM_NON_PREEMPT", 
+    "panda_site": "LSST", 
+    "params": {}, 
+    "parent": "OSG_VIRTUAL", 
+    "pilot_manager": "APF", 
+    "pilot_version": "1", 
+    "pilotlimit": null, 
+    "pledgedcpu": null, 
+    "probe": "manual", 
+    "ptest": false, 
+    "python_path": "", 
+    "python_version": "3", 
+    "queuehours": 0, 
+    "queues": [], 
+    "rc": "NULL", 
+    "rc_country": "NULL", 
+    "rc_site": "NULL", 
+    "rc_site_state": "ACTIVE", 
+    "recoverdir": "", 
+    "region": "US", 
+    "releases": null, 
+    "resource_type": "cloud", 
+    "retry": true, 
+    "site": "LSST", 
+    "site_state": "ACTIVE", 
+    "siteid": "DOMA_LSST_GOOGLE_TEST_EXTRA_HIMEM_NON_PREEMPT", 
+    "special_par": "", 
+    "stageinretry": 2, 
+    "stageoutretry": 2, 
+    "state": "ACTIVE", 
+    "state_comment": "Object was cloned from DOMA_LSST_GOOGLE_TEST_EXTRA_HIMEM via WebUI", 
+    "state_update": "2022-03-21T21:11:03.422146", 
+    "status": "brokeroff", 
+    "system": "", 
+    "tags": "has_worked itb osg working", 
+    "tier": "T3", 
+    "tier_level": 3, 
+    "timefloor": 480, 
+    "tmpdir": "", 
+    "transferringlimit": null, 
+    "type": "production", 
+    "uconfig": {}, 
+    "use_pcache": false, 
+    "validatedreleases": "True", 
+    "vo_name": "atlas", 
+    "wansinklimit": null, 
+    "wansourcelimit": null, 
+    "wnconnectivity": "full", 
+    "wntmpdir": "", 
+    "workflow": "", 
+    "zip_time_gap": 7200
+  }
+}
