@@ -1,0 +1,8 @@
+[core]
+account = dev-panda-harvester@panda-dev-1a74.iam.gserviceaccount.com
+project = panda-dev-1a74
+
+[compute]
+zone = us-central1-c
+region = us-central1
+
