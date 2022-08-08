@@ -200,6 +200,8 @@ function main () {
     install_pilot_wrapper
 
     install_panda_setup
+
+    exit 0
 }
 
 
