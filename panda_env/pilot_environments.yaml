@@ -15,6 +15,7 @@ dependencies:
   - google-crc32c
   - google-resumable-media
   - googleapis-common-protos
+  - google-cloud-logging
   - voms-clients
   - pip:
     - panda-client==1.5.20
