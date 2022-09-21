@@ -100,15 +100,83 @@ function setup_pilot_env () {
 
 
 function install_panda_setup () {
+    # setup panda
     cat <<- EOF > $rootDir/setup_panda.sh
-export PANDA_CONFIG_ROOT=\$HOME
-export PANDA_URL_SSL=https://pandaserver-doma.cern.ch:25443/server/panda
-export PANDA_URL=http://pandaserver-doma.cern.ch:25080/server/panda
-export PANDA_AUTH=oidc
-export PANDA_VERIFY_HOST=off
-export PANDA_AUTH_VO=Rubin
+#!/bin/bash
+if [ "\$#" -ne 1 ]; then
+    echo "lsst_distrib version is required."
+    echo "example: source setup_panda.sh w_2022_35"
+else
+    # setup Rubin env
+    # export LSST_VERSION=w_2022_35
+    export LSST_VERSION=\$1
+    echo "setup lsst_distrib to \${LSST_VERSION}"
+    source /cvmfs/sw.lsst.eu/linux-x86_64/lsst_distrib/\${LSST_VERSION}/loadLSST.bash
+    setup lsst_distrib
+
+    echo "Setup BPS PanDA environment"
+    # setup PanDA env. Will be a simple step when the deployment of PanDA is fully done.
+    export PANDA_CONFIG_ROOT=\$HOME/.panda
+    export PANDA_URL_SSL=https://pandaserver-doma.cern.ch:25443/server/panda
+    export PANDA_URL=http://pandaserver-doma.cern.ch:25080/server/panda
+    export PANDACACHE_URL=\$PANDA_URL_SSL
+    export PANDAMON_URL=https://panda-doma.cern.ch
+    export PANDA_AUTH=oidc
+    export PANDA_VERIFY_HOST=off
+    export PANDA_AUTH_VO=Rubin
+
+    # IDDS_CONFIG path depends on the weekly version
+    export PANDA_SYS=\$CONDA_PREFIX
+    export IDDS_CONFIG=\${PANDA_SYS}/etc/idds/idds.cfg.client.template
+
+    # WMS plugin
+    export BPS_WMS_SERVICE_CLASS=lsst.ctrl.bps.panda.PanDAService
+fi
 EOF
     chmod +x $rootDir/setup_panda.sh
+
+    # setup panda for s3df
+    cat <<- EOF > $rootDir/setup_panda_s3df.sh
+#!/bin/bash
+if [ "\$#" -ne 1 ]; then
+    echo "lsst_distrib version is required."
+    echo "example: source setup_panda.sh w_2022_35"
+else
+    # setup proxy
+    echo "Setup http proxy"
+    export HTTP_PROXY=http://atlsquid.slac.stanford.edu:3128
+    export https_proxy=http://atlsquid.slac.stanford.edu:3128
+    export http_proxy=http://atlsquid.slac.stanford.edu:3128
+    export HTTPS_PROXY=http://atlsquid.slac.stanford.edu:3128
+    export SQUID_PROXY=http://atlsquid.slac.stanford.edu:3128
+
+    # setup Rubin env
+    # export LSST_VERSION=w_2022_35
+    export LSST_VERSION=\$1
+    echo "setup lsst_distrib to \${LSST_VERSION}"
+    source /cvmfs/sw.lsst.eu/linux-x86_64/lsst_distrib/\${LSST_VERSION}/loadLSST.bash
+    setup lsst_distrib
+
+    echo "Setup BPS PanDA environment"
+    # setup PanDA env. Will be a simple step when the deployment of PanDA is fully done.
+    export PANDA_CONFIG_ROOT=\$HOME/.panda
+    export PANDA_URL_SSL=https://pandaserver-doma.cern.ch:25443/server/panda
+    export PANDA_URL=http://pandaserver-doma.cern.ch:25080/server/panda
+    export PANDACACHE_URL=\$PANDA_URL_SSL
+    export PANDAMON_URL=https://panda-doma.cern.ch
+    export PANDA_AUTH=oidc
+    export PANDA_VERIFY_HOST=off
+    export PANDA_AUTH_VO=Rubin
+
+    # IDDS_CONFIG path depends on the weekly version
+    export PANDA_SYS=\$CONDA_PREFIX
+    export IDDS_CONFIG=\${PANDA_SYS}/etc/idds/idds.cfg.client.template
+
+    # WMS plugin
+    export BPS_WMS_SERVICE_CLASS=lsst.ctrl.bps.panda.PanDAService
+fi
+EOF
+    chmod +x $rootDir/setup_panda_s3df.sh
 }
 
 
