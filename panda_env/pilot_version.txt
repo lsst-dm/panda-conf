@@ -1,1 +1,1 @@
-https://storage.googleapis.com/drp-us-central1-containers/pilot3-v3331_5.tgz
+https://github.com/PanDAWMS/pilot3/archive/refs/tags/3.4.1.36.tar.gz
