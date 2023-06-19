@@ -143,12 +143,12 @@ if [ "\$#" -ne 1 ]; then
     echo "example: source setup_panda.sh w_2022_35"
 else
     # setup proxy
-    echo "Setup http proxy"
-    export HTTP_PROXY=http://atlsquid.slac.stanford.edu:3128
-    export https_proxy=http://atlsquid.slac.stanford.edu:3128
-    export http_proxy=http://atlsquid.slac.stanford.edu:3128
-    export HTTPS_PROXY=http://atlsquid.slac.stanford.edu:3128
-    export SQUID_PROXY=http://atlsquid.slac.stanford.edu:3128
+    # echo "Setup http proxy"
+    # export HTTP_PROXY=http://atlsquid.slac.stanford.edu:3128
+    # export https_proxy=http://atlsquid.slac.stanford.edu:3128
+    # export http_proxy=http://atlsquid.slac.stanford.edu:3128
+    # export HTTPS_PROXY=http://atlsquid.slac.stanford.edu:3128
+    # export SQUID_PROXY=http://atlsquid.slac.stanford.edu:3128
 
     # setup Rubin env
     # export LSST_VERSION=w_2022_35
