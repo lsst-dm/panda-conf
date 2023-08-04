@@ -99,7 +99,7 @@ function setup_pilot_env () {
 }
 
 
-function install_panda_setup () {
+function install_panda_setup_old () {
     # setup panda
     cat <<- EOF > $rootDir/setup_panda.sh
 #!/bin/bash
@@ -179,6 +179,105 @@ EOF
     chmod +x $rootDir/setup_panda_s3df.sh
 }
 
+
+function install_panda_setup () {
+    # setup panda
+    cat <<- EOF > $rootDir/setup_panda.sh
+#!/bin/bash
+
+echo "Setup BPS DOMA PanDA (at CERN) environment"
+# setup PanDA env. Will be a simple step when the deployment of PanDA is fully done.
+export PANDA_CONFIG_ROOT=\$HOME/.panda
+export PANDA_URL_SSL=https://pandaserver-doma.cern.ch:25443/server/panda
+export PANDA_URL=http://pandaserver-doma.cern.ch:25080/server/panda
+export PANDACACHE_URL=\$PANDA_URL_SSL
+export PANDAMON_URL=https://panda-doma.cern.ch
+export PANDA_AUTH=oidc
+export PANDA_VERIFY_HOST=off
+export PANDA_AUTH_VO=Rubin
+
+# IDDS_CONFIG path depends on the weekly version
+export PANDA_SYS=\$CONDA_PREFIX
+export IDDS_CONFIG=\${PANDA_SYS}/etc/idds/idds.cfg.client.template
+
+# WMS plugin
+export BPS_WMS_SERVICE_CLASS=lsst.ctrl.bps.panda.PanDAService
+EOF
+    chmod +x $rootDir/setup_panda.sh
+
+    cat <<- EOF > $rootDir/setup_panda_usdf.sh
+#!/bin/bash
+
+echo "Setup BPS USDF PanDA (at SLAC K8S) environment"
+
+# setup PanDA env. Will be a simple step when the deployment of PanDA is fully done.
+export PANDA_CONFIG_ROOT=\$HOME/.panda
+export PANDA_URL_SSL=https://usdf-panda-server.slac.stanford.edu:8443/server/panda
+export PANDA_URL=https://usdf-panda-server.slac.stanford.edu:8443/server/panda
+export PANDACACHE_URL=\$PANDA_URL_SSL
+export PANDAMON_URL=https://usdf-panda-bigmon.slac.stanford.edu:8443/
+export PANDA_AUTH=oidc
+export PANDA_VERIFY_HOST=off
+export PANDA_AUTH_VO=Rubin
+
+export PANDA_BEHIND_REAL_LB=true
+
+# IDDS_CONFIG path depends on the weekly version
+export PANDA_SYS=\$CONDA_PREFIX
+export IDDS_CONFIG=\${PANDA_SYS}/etc/idds/idds.cfg.client.template
+
+# WMS plugin
+export BPS_WMS_SERVICE_CLASS=lsst.ctrl.bps.panda.PanDAService
+EOF
+    chmod +x $rootDir/setup_panda_usdf.sh
+
+    cat <<- EOF > $rootDir/setup_panda_usdf_dev.sh
+#!/bin/bash
+
+echo "Setup BPS USDF DEV PanDA (at SLAC K8S) environment."
+echo "It's for PanDA system development and tests."
+
+# setup PanDA env. Will be a simple step when the deployment of PanDA is fully done.
+export PANDA_CONFIG_ROOT=\$HOME/.panda_usdf_dev
+export PANDA_URL_SSL=https://rubin-panda-server-dev.slac.stanford.edu:8443/server/panda
+export PANDA_URL=https://rubin-panda-server-dev.slac.stanford.edu:8443/server/panda
+export PANDACACHE_URL=\$PANDA_URL_SSL
+export PANDAMON_URL=https://rubin-panda-bigmon-dev.slac.stanford.edu:8443/
+export PANDA_AUTH=oidc
+export PANDA_VERIFY_HOST=off
+export PANDA_AUTH_VO=Rubin
+
+export PANDA_BEHIND_REAL_LB=true
+
+# IDDS_CONFIG path depends on the weekly version
+export PANDA_SYS=\$CONDA_PREFIX
+export IDDS_CONFIG=\${PANDA_SYS}/etc/idds/idds.cfg.client.template
+
+# WMS plugin
+export BPS_WMS_SERVICE_CLASS=lsst.ctrl.bps.panda.PanDAService
+EOF
+    chmod +x $rootDir/setup_panda_usdf_dev.sh
+}
+
+
+function install_lsst_setup () {
+    # setup panda
+    cat <<- EOF > $rootDir/setup_lsst.sh
+#!/bin/bash
+if [ "\$#" -ne 1 ]; then
+    echo "lsst_distrib version is required."
+    echo "example: source setup_panda.sh w_2022_35"
+else
+    # setup Rubin env
+    # export LSST_VERSION=w_2022_35
+    export LSST_VERSION=\$1
+    echo "setup lsst_distrib to \${LSST_VERSION}"
+    source /cvmfs/sw.lsst.eu/linux-x86_64/lsst_distrib/\${LSST_VERSION}/loadLSST.bash
+    setup lsst_distrib
+fi
+EOF
+    chmod +x $rootDir/setup_lsst.sh
+}
 
 function install_pilot () {
     echo "Installing pilot.tar.gz"
@@ -268,6 +367,8 @@ function main () {
     install_pilot_wrapper
 
     install_panda_setup
+
+    install_lsst_setup
 
     exit 0
 }

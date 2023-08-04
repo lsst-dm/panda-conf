@@ -20,3 +20,4 @@ dependencies:
   - pip:
     - panda-client==1.5.20
     - rucio-clients
+    - boto3
