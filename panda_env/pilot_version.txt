@@ -1,1 +1,1 @@
-https://github.com/PanDAWMS/pilot3/archive/refs/tags/3.4.1.36.tar.gz
+https://github.com/PanDAWMS/pilot3/archive/refs/tags/3.6.8.29.tar.gz
