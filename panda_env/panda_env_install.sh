@@ -200,6 +200,8 @@ export PANDA_AUTH_VO=Rubin
 export PANDA_SYS=\$CONDA_PREFIX
 export IDDS_CONFIG=\${PANDA_SYS}/etc/idds/idds.cfg.client.template
 
+export IDDS_MAX_NAME_LENGTH=8000
+
 # WMS plugin
 export BPS_WMS_SERVICE_CLASS=lsst.ctrl.bps.panda.PanDAService
 EOF
@@ -222,6 +224,8 @@ export PANDA_AUTH_VO=Rubin
 # IDDS_CONFIG path depends on the weekly version
 export PANDA_SYS=\$CONDA_PREFIX
 export IDDS_CONFIG=\${PANDA_SYS}/etc/idds/idds.cfg.client.template
+
+export IDDS_MAX_NAME_LENGTH=8000
 
 # WMS plugin
 export BPS_WMS_SERVICE_CLASS=lsst.ctrl.bps.panda.PanDAService
@@ -249,6 +253,8 @@ export PANDA_BEHIND_REAL_LB=true
 export PANDA_SYS=\$CONDA_PREFIX
 export IDDS_CONFIG=\${PANDA_SYS}/etc/idds/idds.cfg.client.template
 
+export IDDS_MAX_NAME_LENGTH=8000
+
 # WMS plugin
 export BPS_WMS_SERVICE_CLASS=lsst.ctrl.bps.panda.PanDAService
 EOF
@@ -275,6 +281,8 @@ export PANDA_BEHIND_REAL_LB=true
 # IDDS_CONFIG path depends on the weekly version
 export PANDA_SYS=\$CONDA_PREFIX
 export IDDS_CONFIG=\${PANDA_SYS}/etc/idds/idds.cfg.client.template
+
+export IDDS_MAX_NAME_LENGTH=8000
 
 # WMS plugin
 export BPS_WMS_SERVICE_CLASS=lsst.ctrl.bps.panda.PanDAService
