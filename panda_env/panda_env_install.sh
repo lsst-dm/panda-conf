@@ -382,6 +382,49 @@ function install_pilot_wrapper () {
     fi
 }
 
+function install_bps () {
+    echo "Installing ctrl_bps and ctrl_bps_panda, tickets/DM-38138"
+    weekly=w_2023_39
+    export BPS_DIR=${rootDir}/bps
+    mkdir -p ${BPS_DIR}
+    cd $BPS_DIR
+
+    echo "Setting up lsst stack and PanDA to install the ticket branches"
+    unset PYTHONPATH
+    source /cvmfs/sw.lsst.eu/linux-x86_64/lsst_distrib/${weekly}/loadLSST.bash
+    setup lsst_distrib
+
+    ticket="tickets/DM-38138"
+    lsst_url="https://github.com/lsst"
+    if [[ -d ${BPS_DIR} ]]; then
+        git clone -b $ticket ${lsst_url}/ctrl_bps
+        git clone -b $ticket ${lsst_url}/ctrl_bps_panda
+        setup -j -r ctrl_bps
+        setup -j -r ctrl_bps_panda
+        cd ctrl_bps
+        scons
+        cd ../ctrl_bps_panda
+        scons
+        cd -
+        conda deactivate
+        conda deactivate
+    else
+        log "<<<<<<ERROR>>>>>>: BPS directory doesn't exist: ${BPS_DIR}. exit."
+        exit 1
+    fi
+}
+
+function install_bps_setup () {
+    # setup bps
+    cat <<- EOF > $rootDir/setup_bps.sh
+#!/bin/bash
+
+setup -j -r $rootDir/bps/ctrl_bps
+setup -j -r $rootDir/bps/ctrl_bps_panda
+EOF
+chmod +x $rootDir/setup_bps.sh
+}
+
 function main () {
     check_wget
 
@@ -400,6 +443,10 @@ function main () {
     install_panda_setup
 
     install_lsst_setup
+
+    install_bps
+
+    install_bps_setup
 
     exit 0
 }

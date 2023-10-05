@@ -12,15 +12,15 @@ Run *panda_pilot_install.sh* to setup pilot env. It will::
   * install pilot wrapper
 
 Here is how to run *panda_pilot_install.sh*::
-  $> bash panda_pilot_install.sh  <dest_dir>
+  $> bash panda_env_install.sh  <dest_dir>
 For example::
-  $> bash panda_pilot_install.sh /cvmfs/sw.lsst.eu/linux-x86_64/panda/
+  $> bash panda_env_install.sh /cvmfs/sw.lsst.eu/linux-x86_64/panda/
 
 
 Setup cron jobs
 ================
 
-A cron job is required to renew the CRL of CA certificates. *panda_pilot_install.sh* will
+A cron job is required to renew the CRL of CA certificates. *panda_env_install.sh* will
 generate the cron command under *<dest_dir>/tools/fetch-crl.cron*. Please install it too.
 
 
