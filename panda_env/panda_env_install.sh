@@ -200,7 +200,7 @@ export PANDA_AUTH_VO=Rubin
 export PANDA_SYS=\$CONDA_PREFIX
 export IDDS_CONFIG=\${PANDA_SYS}/etc/idds/idds.cfg.client.template
 
-export IDDS_MAX_NAME_LENGTH=8000
+export IDDS_MAX_NAME_LENGTH=4000
 
 # WMS plugin
 export BPS_WMS_SERVICE_CLASS=lsst.ctrl.bps.panda.PanDAService
@@ -225,7 +225,7 @@ export PANDA_AUTH_VO=Rubin
 export PANDA_SYS=\$CONDA_PREFIX
 export IDDS_CONFIG=\${PANDA_SYS}/etc/idds/idds.cfg.client.template
 
-export IDDS_MAX_NAME_LENGTH=8000
+export IDDS_MAX_NAME_LENGTH=4000
 
 # WMS plugin
 export BPS_WMS_SERVICE_CLASS=lsst.ctrl.bps.panda.PanDAService
@@ -253,7 +253,7 @@ export PANDA_BEHIND_REAL_LB=true
 export PANDA_SYS=\$CONDA_PREFIX
 export IDDS_CONFIG=\${PANDA_SYS}/etc/idds/idds.cfg.client.template
 
-export IDDS_MAX_NAME_LENGTH=8000
+export IDDS_MAX_NAME_LENGTH=30000
 
 # WMS plugin
 export BPS_WMS_SERVICE_CLASS=lsst.ctrl.bps.panda.PanDAService
@@ -282,7 +282,7 @@ export PANDA_BEHIND_REAL_LB=true
 export PANDA_SYS=\$CONDA_PREFIX
 export IDDS_CONFIG=\${PANDA_SYS}/etc/idds/idds.cfg.client.template
 
-export IDDS_MAX_NAME_LENGTH=8000
+export IDDS_MAX_NAME_LENGTH=30000
 
 # WMS plugin
 export BPS_WMS_SERVICE_CLASS=lsst.ctrl.bps.panda.PanDAService
@@ -387,7 +387,8 @@ function install_bps () {
     export BPS_DIR=${rootDir}/bps
     mkdir -p ${BPS_DIR}
 
-    tarfile=https://github.com/zhaoyuyoung/shared_files/raw/main/DM-38138.tar.gz
+    # tarfile=https://github.com/zhaoyuyoung/shared_files/raw/main/DM-38138.tar.gz
+    tarfile=https://github.com/wguanicedew/share_files/raw/main/DM-38138.tar.gz
     if [[ -d ${BPS_DIR} ]]; then
     	cd $BPS_DIR
         wget $tarfile
