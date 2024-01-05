@@ -415,6 +415,16 @@ EOF
 chmod +x $rootDir/setup_bps.sh
 }
 
+function install_cric () {
+    echo "Installing cric panda queues and ddm endpoints on cvmfs"
+    export CRIC_DIR=${rootDir}/cric
+    mkdir -p ${CRIC_DIR}
+    wget --no-check-certificate https://datalake-cric.cern.ch/api/atlas/ddmendpoint/query/?json -O datalake-cric-ddm.json
+    wget --no-check-certificate https://datalake-cric.cern.ch/api/atlas/pandaqueue/query/?json -O datalake-cric-pandaqueue.json
+    cd -
+    echo "cric panda queues and ddm endpoints installed on cvmfs"
+}
+
 function main () {
     check_wget
 
@@ -437,6 +447,8 @@ function main () {
     install_bps
 
     install_bps_setup
+
+    install_cric
 
     exit 0
 }
