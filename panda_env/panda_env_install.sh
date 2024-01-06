@@ -419,6 +419,7 @@ function install_cric () {
     echo "Installing cric panda queues and ddm endpoints on cvmfs"
     export CRIC_DIR=${rootDir}/cric
     mkdir -p ${CRIC_DIR}
+    cd ${CRIC_DIR}
     wget --no-check-certificate https://datalake-cric.cern.ch/api/atlas/ddmendpoint/query/?json -O datalake-cric-ddm.json
     wget --no-check-certificate https://datalake-cric.cern.ch/api/atlas/pandaqueue/query/?json -O datalake-cric-pandaqueue.json
     cd -
