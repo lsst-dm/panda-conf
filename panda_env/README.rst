@@ -8,7 +8,7 @@ Run *panda_pilot_install.sh* to setup pilot env. It will::
   * setup pilot env with conda
   * install CA certificates
   * install voms-clients, panda-client, rucio-clients, google-storage packages
-  * install pilot codes
+  * install pilot
   * install pilot wrapper
 
 Here is how to run *panda_pilot_install.sh*::
