@@ -346,6 +346,9 @@ function install_pilot () {
         log "<<<<<<ERROR>>>>>>: Pilot directory doesn't exist: ${PANDA_PILOT_DIR}. exit."
 	exit 1
     fi
+
+    echo "Installing pilot default config"
+    cp $myDir/pilot_default.cfg ${PANDA_PILOT_DIR}
 }
 
 
