@@ -432,6 +432,18 @@ function install_cric () {
     echo "cric panda queues and ddm endpoints installed on cvmfs"
 }
 
+function install_rucio () {
+    echo "Installing rucio config files on cvmfs"
+    export RUCIO_DIR=${rootDir}/rucio
+    mkdir -p ${RUCIO_DIR}
+    cd ${RUCIO_DIR}
+
+    cp $myDir/rucio.cfg ${RUCIO_DIR}/
+
+    cd -
+    echo "rucio config installed on cvmfs"
+}
+
 function main () {
     check_wget
 
@@ -456,6 +468,8 @@ function main () {
     install_bps_setup
 
     install_cric
+
+    install_rucio
 
     exit 0
 }
