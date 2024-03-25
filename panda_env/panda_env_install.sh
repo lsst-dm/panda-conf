@@ -439,6 +439,8 @@ function install_rucio () {
     cd ${RUCIO_DIR}
 
     cp $myDir/rucio.cfg ${RUCIO_DIR}/
+    cp $myDir/rucio-rubin.cfg ${RUCIO_DIR}/
+    cp $myDir/rucio-rubin-dev.cfg ${RUCIO_DIR}/
 
     cd -
     echo "rucio config installed on cvmfs"
