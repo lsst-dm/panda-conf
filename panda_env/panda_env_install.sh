@@ -415,8 +415,10 @@ function install_bps_setup () {
     cat <<- EOF > $rootDir/setup_bps.sh
 #!/bin/bash
 
-setup -j -r $rootDir/bps/ctrl_bps
-setup -j -r $rootDir/bps/ctrl_bps_panda
+# no need local bps version anymore
+# setup -j -r $rootDir/bps/ctrl_bps
+# setup -j -r $rootDir/bps/ctrl_bps_panda
+
 EOF
 chmod +x $rootDir/setup_bps.sh
 }
@@ -465,7 +467,7 @@ function main () {
 
     install_lsst_setup
 
-    install_bps
+    # install_bps
 
     install_bps_setup
 
