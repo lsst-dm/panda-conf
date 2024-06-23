@@ -22,3 +22,4 @@ dependencies:
     - rucio-clients
     - boto3
     - psutil
+    - loki_logger_handler
