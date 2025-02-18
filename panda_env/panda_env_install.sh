@@ -226,27 +226,27 @@ else
     export LSST_VERSION=\$1
     echo "setup lsst_distrib to \${LSST_VERSION}"
 
-    if [ -n "$LSST_ARCH" ]; then
-        LSST_ARCH_TEMP=${LSST_ARCH}
-        echo "LSST_ARCH is already set to ${LSST_ARCH_TEMP}."
-    elif [[ "$LSST_VERSION" < "w_2025_01" ]]; then
+    if [ -n "\$LSST_ARCH" ]; then
+        LSST_ARCH_TEMP=\${LSST_ARCH}
+        echo "LSST_ARCH is already set to \${LSST_ARCH_TEMP}."
+    elif [[ "\$LSST_VERSION" < "w_2025_01" ]]; then
         export LSST_ARCH_TEMP="linux-x86_64"
-        echo "LSST_VERSION is lower than w_2025_01, setting LSST_ARCH to ${LSST_ARCH_TEMP}"
+        echo "LSST_VERSION is lower than w_2025_01, setting LSST_ARCH to \${LSST_ARCH_TEMP}"
     else
         export LSST_ARCH_TEMP="almalinux-x86_64"
-        echo "LSST_VERSION is greater than or equal to w_2025_01, setting LSST_ARCH to ${LSST_ARCH_TEMP}"
+        echo "LSST_VERSION is greater than or equal to w_2025_01, setting LSST_ARCH to \${LSST_ARCH_TEMP}"
     fi
 
     # Load LSST environment
-    LSST_SETUP_PATH="/cvmfs/sw.lsst.eu/${LSST_ARCH_TEMP}/lsst_distrib/${LSST_VERSION}/loadLSST.bash"
+    LSST_SETUP_PATH="/cvmfs/sw.lsst.eu/\${LSST_ARCH_TEMP}/lsst_distrib/\${LSST_VERSION}/loadLSST.bash"
 
     unset LSST_ARCH_TEMP
 
-    if [ -f "$LSST_SETUP_PATH" ]; then
-        source "$LSST_SETUP_PATH"
+    if [ -f "\$LSST_SETUP_PATH" ]; then
+        source "\$LSST_SETUP_PATH"
         setup lsst_distrib
     else
-        echo "Error: LSST setup script not found at ${LSST_SETUP_PATH}"
+        echo "Error: LSST setup script not found at \${LSST_SETUP_PATH}"
         return 1
     fi
 fi
