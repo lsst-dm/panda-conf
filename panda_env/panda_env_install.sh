@@ -227,27 +227,35 @@ else
     echo "setup lsst_distrib to \${LSST_VERSION}"
 
     if [ -n "\$LSST_ARCH" ]; then
-        LSST_ARCH_TEMP=\${LSST_ARCH}
-        echo "LSST_ARCH is already set to \${LSST_ARCH_TEMP}."
-    elif [[ "\$LSST_VERSION" < "w_2025_01" ]]; then
-        export LSST_ARCH_TEMP="linux-x86_64"
-        echo "LSST_VERSION is lower than w_2025_01, setting LSST_ARCH to \${LSST_ARCH_TEMP}"
+        echo "LSST_ARCH is already set to \${LSST_ARCH}."
+        LSST_SETUP_PATH="/cvmfs/sw.lsst.eu/\${LSST_ARCH}/lsst_distrib/\${LSST_VERSION}/loadLSST.bash"
     else
-        export LSST_ARCH_TEMP="almalinux-x86_64"
-        echo "LSST_VERSION is greater than or equal to w_2025_01, setting LSST_ARCH to \${LSST_ARCH_TEMP}"
+        ARCH_TYPE="\$(uname -m)"
+        LSST_ARCH_ALMA="almalinux-\${ARCH_TYPE}"
+        LSST_ARCH_CENTOS="linux-\${ARCH_TYPE}"
+
+        # Define possible setup paths
+        LSST_SETUP_PATH_ALMA="/cvmfs/sw.lsst.eu/\${LSST_ARCH_ALMA}/lsst_distrib/\${LSST_VERSION}/loadLSST.bash"
+        LSST_SETUP_PATH_CENTOS="/cvmfs/sw.lsst.eu/\${LSST_ARCH_CENTOS}/lsst_distrib/\${LSST_VERSION}/loadLSST.bash"
+
+        # Select available setup path
+        if [ -f "\$LSST_SETUP_PATH_ALMA" ]; then
+            # LSST_ARCH="\$LSST_ARCH_ALMA"
+            LSST_SETUP_PATH="\$LSST_SETUP_PATH_ALMA"
+        elif [ -f "\$LSST_SETUP_PATH_CENTOS" ]; then
+            # LSST_ARCH="\$LSST_ARCH_CENTOS"
+            LSST_SETUP_PATH="\$LSST_SETUP_PATH_CENTOS"
+        fi
     fi
 
-    # Load LSST environment
-    LSST_SETUP_PATH="/cvmfs/sw.lsst.eu/\${LSST_ARCH_TEMP}/lsst_distrib/\${LSST_VERSION}/loadLSST.bash"
-
-    unset LSST_ARCH_TEMP
-
-    if [ -f "\$LSST_SETUP_PATH" ]; then
+    # Ensure setup path is valid before sourcing
+    if [ -n "\$LSST_SETUP_PATH" ] && [ -f "\$LSST_SETUP_PATH" ]; then
+        echo "Sourcing LSST setup from: \$LSST_SETUP_PATH"
         source "\$LSST_SETUP_PATH"
         setup lsst_distrib
     else
-        echo "Error: LSST setup script not found at \${LSST_SETUP_PATH}"
-        return 1
+        echo "Error: LSST setup script not found for version \${LSST_VERSION}."
+        exit 1
     fi
 fi
 EOF
