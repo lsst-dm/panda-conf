@@ -1,1 +1,1 @@
-https://github.com/PanDAWMS/pilot3/archive/refs/tags/3.9.4.15.tar.gz
+https://github.com/wguanicedew/share_files/raw/refs/heads/main/pilot3-3.10.2.2_delay_get_job.tar.gz
