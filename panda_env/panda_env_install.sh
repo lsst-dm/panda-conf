@@ -397,6 +397,13 @@ function install_rucio () {
     echo "rucio config installed on cvmfs"
 }
 
+function fix_issues () {
+    echo "Fix voms-clients links"
+    voms_dir=$rootDir/conda/install/envs/pilot/share/voms-clients/lib
+    cd $voms_dir
+    ln -s ./voms-clients/* ./
+}
+
 function main () {
     check_wget
 
@@ -423,6 +430,8 @@ function main () {
     install_cric
 
     install_rucio
+
+    fix_issues
 
     exit 0
 }
