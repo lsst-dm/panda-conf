@@ -61,7 +61,11 @@ function install_pilot_env () {
             source ${PANDA_PILOT_CONDA_DIR}/bin/activate
             conda config --remove-key channels || true
 	    conda config --remove channels defaults
-            conda config --add channels conda-forge
+
+	    conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/main
+            conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/r
+
+	    conda config --add channels conda-forge
             conda config --set channel_priority strict
             conda env create -f $myDir/pilot_environments.yaml
 	    if [[ $? -ne 0 ]]; then
