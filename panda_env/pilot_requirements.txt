@@ -1,1 +1,1 @@
-panda-client==1.5.20
+panda-client
