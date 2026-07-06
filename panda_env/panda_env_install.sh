@@ -28,6 +28,8 @@ function check_wget() {
 function install_conda () {
     echo "installing PanDA conda env at $rootDir/conda"
     export PANDA_PILOT_CONDA_DIR=$rootDir/conda/install
+    # export CONDA_NO_PLUGINS=true
+    export CONDA_LIBMAMBA_SOLVER_NO_SHARDS=1
     if [[ -d ${PANDA_PILOT_CONDA_DIR} ]]; then
         log "<<<<<<WARN>>>>>>: Found conda installed at: ${PANDA_PILOT_CONDA_DIR}, not install anymore."
     else
@@ -56,6 +58,8 @@ function install_conda () {
 function install_pilot_env () {
     echo "installing PanDA pilot env"
     export PANDA_PILOT_ENV_DIR=${PANDA_PILOT_CONDA_DIR}/envs/pilot
+    # export CONDA_NO_PLUGINS=true
+    export CONDA_LIBMAMBA_SOLVER_NO_SHARDS=1
     if [[ -d ${PANDA_PILOT_CONDA_DIR} ]]; then
         if ! [[ -d ${PANDA_PILOT_ENV_DIR} ]]; then
             source ${PANDA_PILOT_CONDA_DIR}/bin/activate
