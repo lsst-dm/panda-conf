@@ -30,9 +30,13 @@ function install_conda () {
     export PANDA_PILOT_CONDA_DIR=$rootDir/conda/install
     # export CONDA_NO_PLUGINS=true
     export CONDA_LIBMAMBA_SOLVER_NO_SHARDS=1
+    log "PANDA_PILOT_CONDA_DIR: $PANDA_PILOT_CONDA_DIR"
     if [[ -d ${PANDA_PILOT_CONDA_DIR} ]]; then
-        log "<<<<<<WARN>>>>>>: Found conda installed at: ${PANDA_PILOT_CONDA_DIR}, not install anymore."
-    else
+        rm -fr $rootDir/conda
+        log "<<<<<<WARN>>>>>>: Found conda at: ${PANDA_PILOT_CONDA_DIR}, remove $rootDir/conda"
+        # log "<<<<<<WARN>>>>>>: Found conda installed at: ${PANDA_PILOT_CONDA_DIR}, not install anymore."
+    fi
+
         mkdir -p $rootDir/conda
         if [[ -d $rootDir/conda ]]; then
             cd $rootDir/conda
@@ -51,7 +55,7 @@ function install_conda () {
             log "<<<<<<ERROR>>>>>>: Failed to create directory $rootDir/conda. exit."
 	    exit 1
         fi
-    fi
+    
 }
 
 
@@ -69,9 +73,11 @@ function install_pilot_env () {
             conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/main
             conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/r
 
+            conda update --name base --channel defaults --yes conda
             conda config --add channels conda-forge
+            conda config --set plugins.use_sharded_repodata false
             conda config --set channel_priority strict
-            conda env create -f $myDir/pilot_environments.yaml
+            conda env create --quiet -f $myDir/pilot_environments.yaml
 	    if [[ $? -ne 0 ]]; then
                 log "<<<<<<ERROR>>>>>>: Failed to install pilot env. exit"
                 exit 1
