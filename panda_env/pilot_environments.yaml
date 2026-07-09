@@ -18,8 +18,12 @@ dependencies:
   - google-cloud-logging
   - voms-clients
   - pip:
-    - panda-client==1.5.20
+    - panda-client
     - rucio-clients
     - boto3
     - psutil
     - loki_logger_handler
+    - idds-common
+    - idds-workflow
+    - idds-client
+    - idds-doma

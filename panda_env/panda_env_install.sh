@@ -127,7 +127,7 @@ echo "Setup BPS USDF PanDA (at SLAC K8S) environment"
 export PANDA_CONFIG_ROOT=\$HOME/.panda
 export PANDA_URL_SSL=https://usdf-panda-server.slac.stanford.edu:8443/server/panda
 export PANDA_URL=https://usdf-panda-server.slac.stanford.edu:8443/server/panda
-export PANDACACHE_URL=\$PANDA_URL_SSL
+export PANDACACHE_URL=https://usdf-panda-server.slac.stanford.edu:8443/api/v1
 export PANDAMON_URL=https://usdf-panda-bigmon.slac.stanford.edu:8443/
 export PANDA_AUTH=oidc
 export PANDA_VERIFY_HOST=off
@@ -154,7 +154,7 @@ echo "Setup BPS DOMA PanDA (at CERN) environment"
 export PANDA_CONFIG_ROOT=\$HOME/.panda
 export PANDA_URL_SSL=https://pandaserver-doma.cern.ch:25443/server/panda
 export PANDA_URL=http://pandaserver-doma.cern.ch:25080/server/panda
-export PANDACACHE_URL=\$PANDA_URL_SSL
+export PANDACACHE_URL=https://pandaserver-doma.cern.ch:25443/api/v1
 export PANDAMON_URL=https://panda-doma.cern.ch
 export PANDA_AUTH=oidc
 export PANDA_VERIFY_HOST=off
@@ -180,7 +180,7 @@ echo "Setup BPS USDF PanDA (at SLAC K8S) environment"
 export PANDA_CONFIG_ROOT=\$HOME/.panda
 export PANDA_URL_SSL=https://usdf-panda-server.slac.stanford.edu:8443/server/panda
 export PANDA_URL=https://usdf-panda-server.slac.stanford.edu:8443/server/panda
-export PANDACACHE_URL=\$PANDA_URL_SSL
+export PANDACACHE_URL=https://usdf-panda-server.slac.stanford.edu:8443/api/v1
 export PANDAMON_URL=https://usdf-panda-bigmon.slac.stanford.edu:8443/
 export PANDA_AUTH=oidc
 export PANDA_VERIFY_HOST=off
@@ -209,7 +209,7 @@ echo "It's for PanDA system development and tests."
 export PANDA_CONFIG_ROOT=\$HOME/.panda_usdf_dev
 export PANDA_URL_SSL=https://rubin-panda-server-dev.slac.stanford.edu:8443/server/panda
 export PANDA_URL=https://rubin-panda-server-dev.slac.stanford.edu:8443/server/panda
-export PANDACACHE_URL=\$PANDA_URL_SSL
+export PANDACACHE_URL=https://rubin-panda-server-dev.slac.stanford.edu:8443/api/v1
 export PANDAMON_URL=https://rubin-panda-bigmon-dev.slac.stanford.edu:8443/
 export PANDA_AUTH=oidc
 export PANDA_VERIFY_HOST=off
@@ -421,6 +421,43 @@ function fix_issues () {
     ln -s ./voms-clients/* ./
 }
 
+function install_panda_idds_client () {
+    echo "Installing PanDA iDDS clients"
+    panda_url=`cat $myDir/panda_idds_client.txt`
+    export PANDA_CLIENT_DIR=${rootDir}/panda_client
+    mkdir -p ${PANDA_CLIENT_DIR}
+
+    panda_name="$(basename -- ${panda_url})"
+    dest_panda=${PANDA_CLIENT_DIR}/${panda_name}
+    if [[ -d ${PANDA_CLIENT_DIR} ]]; then
+        cd ${PANDA_CLIENT_DIR}
+        wget ${panda_url}
+        tar xzf ${panda_name}
+        cd -
+    else
+        log "<<<<<<ERROR>>>>>>: PanDA Client directory doesn't exist: ${PANDA_CLIENT_DIR}. exit."
+        exit 1
+    fi
+
+    echo "PanDA iDDS clients installed successfully to ${PANDA_CLIENT_DIR}"
+}
+
+function install_panda_idds_client_setup () {
+    # setup bps
+    cat <<- EOF > $rootDir/setup_panda_idds_client.sh
+#!/bin/bash
+
+
+if [ -n "\${PYTHONPATH}" ]; then
+    export PYTHONPATH="\${PYTHONPATH}:${rootDir}/panda_client/python3.13/site-packages"
+else
+    export PYTHONPATH="${rootDir}/panda_client/python3.13/site-packages"
+fi
+
+EOF
+chmod +x $rootDir/setup_panda_idds_client.sh
+}
+
 function main () {
     check_wget
 
@@ -449,6 +486,10 @@ function main () {
     install_rucio
 
     fix_issues
+
+    install_panda_idds_client
+
+    install_panda_idds_client_setup
 
     exit 0
 }
