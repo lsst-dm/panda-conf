@@ -439,6 +439,8 @@ function install_panda_idds_client () {
         exit 1
     fi
 
+    chmod a+rx -R ${PANDA_CLIENT_DIR}
+
     echo "PanDA iDDS clients installed successfully to ${PANDA_CLIENT_DIR}"
 }
 
